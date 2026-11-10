@@ -8,6 +8,7 @@ to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - The README demo video now shows document upload, connectors and publishing.
+- The project moved to github.com/dorrahmani/nexus-osint (old links redirect) and the Docker image to ghcr.io/dorrahmani/nexus-osint.
 
 ## [1.4.0] - 2026-11-06
 
@@ -18,7 +19,7 @@ cloud connectors and a container image.
 
 ### Added
 - Container image on GitHub Container Registry
-  (`ghcr.io/dorrachmani-dotcom/nexus-osint`, linux/amd64 and linux/arm64),
+  (`ghcr.io/dorrahmani/nexus-osint`, linux/amd64 and linux/arm64),
   published by a new Docker workflow on release tags. Pull requests touching the
   image get a build-only check. The arm64 image skips the two x86_64-only helper
   binaries (PhoneInfoga, subfinder). `.dockerignore` now also excludes env
@@ -420,9 +421,9 @@ First tagged release.
 - Inline script embedding of collected data uses Jinja `|tojson` to prevent
   `</script>` breakout.
 
-[Unreleased]: https://github.com/dorrachmani-dotcom/nexus-osint/compare/v1.4.0...HEAD
-[1.4.0]: https://github.com/dorrachmani-dotcom/nexus-osint/compare/v1.3.0...v1.4.0
-[1.3.0]: https://github.com/dorrachmani-dotcom/nexus-osint/compare/v1.2.0...v1.3.0
-[1.2.0]: https://github.com/dorrachmani-dotcom/nexus-osint/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/dorrachmani-dotcom/nexus-osint/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/dorrachmani-dotcom/nexus-osint/releases/tag/v1.0.0
+[Unreleased]: https://github.com/dorrahmani/nexus-osint/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/dorrahmani/nexus-osint/compare/v1.3.0...v1.4.0
+[1.3.0]: https://github.com/dorrahmani/nexus-osint/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/dorrahmani/nexus-osint/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/dorrahmani/nexus-osint/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/dorrahmani/nexus-osint/releases/tag/v1.0.0
