@@ -4,7 +4,7 @@
 
 **A local-first OSINT workstation: collect open sources, enrich them with AI, and triage everything in one private, auditable feed on your own machine.**
 
-[![CI](https://github.com/dorrachmani-dotcom/nexus-osint/actions/workflows/ci.yml/badge.svg)](https://github.com/dorrachmani-dotcom/nexus-osint/actions/workflows/ci.yml)
+[![CI](https://github.com/dorrahmani/nexus-osint/actions/workflows/ci.yml/badge.svg)](https://github.com/dorrahmani/nexus-osint/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)
 
@@ -146,7 +146,7 @@ A prebuilt multi-architecture image (amd64 and arm64) is published to GitHub
 Container Registry with each release:
 
 ```bash
-docker run -p 127.0.0.1:8000:8000 -v nexus-data:/app/data ghcr.io/dorrachmani-dotcom/nexus-osint:latest
+docker run -p 127.0.0.1:8000:8000 -v nexus-data:/app/data ghcr.io/dorrahmani/nexus-osint:latest
 ```
 
 Then open <http://127.0.0.1:8000>. Keep the `127.0.0.1:` prefix in `-p`: inside
@@ -496,7 +496,7 @@ lint/type-check gates in CI.
 
 ## About the author
 
-Built by **Dor Rachmani** — [GitHub](https://github.com/dorrachmani-dotcom).
+Built by **Dor Rahmani** — [GitHub](https://github.com/dorrahmani).
 
 Available for consulting on OSINT tooling and AI-agent systems (local-first
 architectures, agent safety, LLM-backed data pipelines).
