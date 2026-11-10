@@ -12,9 +12,9 @@
 
 </div>
 
-<p align="center"><b>One-minute demo:</b> one sentence to Sherlock opens a full investigation, then your own documents, connectors, and publishing the result back.</p>
+<p align="center"><b>One-minute demo:</b> one sentence to Sherlock opens a full investigation and its relationship graph, then your own documents, connectors, and publishing the result back.</p>
 
-https://github.com/user-attachments/assets/993629f7-98cf-4224-bc06-b2c4d6c59387
+https://github.com/user-attachments/assets/6b622d66-14a5-49e0-b5a6-598554d5243a
 
 <p align="center"><sub>The demo runs on live public sources; names of private individuals are blurred.</sub></p>
 
