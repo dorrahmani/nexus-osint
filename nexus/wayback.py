@@ -43,7 +43,7 @@ from nexus.netguard import safe_http_url
 
 logger = logging.getLogger("nexus.wayback")
 
-USER_AGENT = "Nexus-OSINT (+https://github.com/dorrachmani-dotcom/nexus-osint)"
+USER_AGENT = "Nexus-OSINT (+https://github.com/dorrahmani/nexus-osint)"
 AVAILABILITY_API = "https://archive.org/wayback/available"
 WAYBACK_BASE = "https://web.archive.org"
 SPN_ANON_PREFIX = f"{WAYBACK_BASE}/save/"
