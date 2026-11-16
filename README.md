@@ -1,506 +1,104 @@
 <div align="center">
 
+<img src="docs/media/social-preview.png" alt="Nexus-OSINT" width="100%">
+
 # Nexus-OSINT
 
-**A local-first OSINT workstation: collect open sources, enrich them with AI, and triage everything in one private, auditable feed on your own machine.**
+**The OSINT workstation that never leaves your machine.**<br>
+Collect open sources, enrich them with AI, and investigate in cases and graphs.
 
 [![CI](https://github.com/dorrahmani/nexus-osint/actions/workflows/ci.yml/badge.svg)](https://github.com/dorrahmani/nexus-osint/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/dorrahmani/nexus-osint?color=f59e0b)](https://github.com/dorrahmani/nexus-osint/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.11 | 3.12](https://img.shields.io/badge/python-3.11%20%7C%203.12-3776AB?logo=python&logoColor=white)
+![Local-first](https://img.shields.io/badge/runs%20on-127.0.0.1%20only-2ea44f)
 
-[Quickstart](#quickstart) · [Tour](#a-guided-tour) · [Features](docs/FEATURES.md) · [Ingestion](docs/INGESTION.md) · [Publishing](docs/PUBLISHING.md) · [Overview](docs/OVERVIEW.md) · [User Guide](docs/USER_GUIDE.md) · [Developer Guide](docs/DEVELOPER_GUIDE.md) · [Roadmap](docs/ROADMAP.md) · [Security](SECURITY.md)
+[**Download**](https://github.com/dorrahmani/nexus-osint/releases/latest) · [Quickstart](#quickstart) · [Tour](docs/TOUR.md) · [Docs](#documentation) · [Security](SECURITY.md)
 
 </div>
 
-<p align="center"><b>One-minute demo:</b> one sentence to Sherlock opens a full investigation and its relationship graph, then your own documents, connectors, and publishing the result back.</p>
-
 https://github.com/user-attachments/assets/6b622d66-14a5-49e0-b5a6-598554d5243a
 
-<p align="center"><sub>The demo runs on live public sources; names of private individuals are blurred.</sub></p>
+<p align="center"><sub>One minute: a single sentence opens a full investigation and its relationship graph. The demo runs on live public sources; names of private individuals are blurred.</sub></p>
+
+## Why
+
+Open-source material is scattered across feeds, platforms and one-off tools. Hosted
+platforms fix that, but want your queries and findings on their servers. Nexus-OSINT
+is the opposite trade: everything runs on `127.0.0.1`, your data is one SQLite
+file, and every outbound connection is logged and auditable.
+
+## Highlights
+
+| | |
+|---|---|
+| **Collect** | RSS, Google News, Reddit and GDELT with no keys; optional Twitter/X, Telegram, SERPAPI and any HTTP API without code |
+| **Your own data** | PDF, Word, Excel, PowerPoint, email, images (OCR), ZIPs, intranet pages, Confluence, Obsidian, Notion, Slack, Drive and SharePoint |
+| **Investigate** | Cases, a relationship graph, entity dossiers, a daily brief and a "Focus" view of what needs your eyes |
+| **Sherlock** | An assistant that opens cases, runs scans and builds reports from one sentence, inside an allow-list fence |
+| **Publish back** | Edit a finding and send it to Confluence, Obsidian or the knowledge pool, always after a preview |
+| **Private by design** | Closed-network ready, encrypted evidence, nothing leaves unless you allow it, an outbound activity log you can export |
+| **AI optional** | Gemini, OpenAI, Anthropic, Grok, or a fully local model. No key? Everything still works by hand |
 
 <p align="center">
-  <img src="docs/media/feed.png" alt="The Nexus-OSINT analyst feed: AI-summarised items with threat level, extracted entities and case membership" width="100%">
+  <img src="docs/media/feed.png" alt="The analyst feed: AI-summarised items with threat level, entities and case membership" width="49%">
+  <img src="docs/media/graph.png" alt="The relationship graph of a case" width="49%">
 </p>
-<p align="center"><sub>All screenshots use the built-in, entirely fictional demo dataset (the <b>Load demo data</b> button on the empty feed).</sub></p>
-
-## The problem
-
-Open-source material is scattered across news feeds, social platforms, search
-engines and one-off CLI tools. An analyst ends up with forty tabs, no memory of
-what was already seen, and no record of where a claim came from. Hosted
-platforms solve the aggregation but want your queries and your findings on their
-servers, which is a non-starter for a lot of investigative work.
-
-Nexus-OSINT is the opposite trade: everything runs on `127.0.0.1`, the data is
-one SQLite file you own, and every outbound connection can be audited.
-
-## What it does
-
-- **Collects** from RSS, Google News, Reddit and GDELT with no API keys, plus
-  optional Twitter/X, Telegram, SERPAPI and Google CSE, and wrapped OSINT CLI
-  tools. Reddit works keyless through its public search
-  feed; the official Reddit Data API (`REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET`,
-  for steady per-subreddit pulls) is optional and, since 2026, needs approval
-  from Reddit before keys work. Commercial use needs a separate agreement with Reddit.
-- **Connects any HTTP API** without code: JSON, NDJSON, XML, CSV, RSS/Atom or
-  HTML (auto-detected); page/offset/cursor/next-link paging; header, query,
-  bearer, Basic or OAuth2 client-credentials auth; POST templates. An AI planner
-  drafts the configuration from the API's docs or a sample, and Auto-Adapt
-  re-maps fields when the response shape drifts.
-- **Ingests your own documents**: upload PDFs, Word, Excel, PowerPoint, CSV, HTML,
-  saved pages (MHTML), Markdown/text, JSON, XML, e-mails, images and scanned PDFs
-  (OCR) or a ZIP
-  (including an exported wiki or docs site) into a case or a shared knowledge
-  pool that Sherlock answers from. Files stay local; unknown formats are read on
-  a best-effort basis, and archives are unpacked with ZIP-bomb protection.
-- **Watches web pages and documentation sites**: add a URL (optionally crawl the
-  same site within depth/page limits, honouring `robots.txt`) and each scan adds
-  an item for a new page or a short summary of what changed on an existing one.
-  Works on closed networks too: intranet hosts are blocked unless you allow-list
-  them (`INTERNAL_ALLOWED_HOSTS` / `INTERNAL_ALLOWED_CIDRS`), with optional
-  internal-CA trust and Basic/token/header/cookie logins kept in `.env`.
-- **Reads cloud services, read-only** (Notion, Slack, Google Drive, SharePoint and
-  OneDrive): connect a token, test it, and new
-  and changed content lands in a case or the knowledge pool, with AI off unless
-  you allow it. The token stays in `.env`.
-- **Connects Confluence** (Cloud or Data Center / Server, also on a closed
-  network): pick spaces and/or a CQL query and its pages (optionally blog posts,
-  comments and attachments) land in a case or the knowledge pool; later scans
-  read only new and changed pages. The token stays in `.env`.
-- **Imports Obsidian vaults** ("Obsidian: import vault"): point at a local vault
-  folder (read-only) and its notes, with frontmatter, tags, `[[links]]` and
-  embedded files, land in a case or the knowledge pool; re-scans pick up new,
-  changed and deleted notes. Wikilinks can be drawn on the relationship graph
-  (note -> note and note -> entity). A zipped vault can also be uploaded, and a
-  case still exports the other way ("Obsidian: export case").
-- **Deduplicates and searches**: exact re-fetches are no-ops, near-duplicates
-  collapse into one row with an "echoed N times" badge, and the whole history is
-  searchable through SQLite FTS5.
-- **Enriches** items with a pluggable AI provider (Gemini, OpenAI, Anthropic,
-  xAI Grok, or a fully local model via Ollama or any OpenAI-compatible server
-  such as LM Studio, llama.cpp, vLLM, Jan or LocalAI; "Automatic" picks the first
-  one that is ready): summary, translation, threat level, entity extraction, and
-  0-100 relevance scores against your standing questions.
-- **Briefs you by email** (opt-in): once a day Sherlock writes a short analyst
-  brief of what is new in your open cases and sends it through Gmail (send-only
-  OAuth with PKCE, no password stored), Outlook, Resend, SendGrid or any SMTP
-  server; per-case daily reports are saved locally
-  as PDF/HTML and listed on each case's Reports tab.
-- **Organizes** work into cases with tracking terms, pinned items, notes,
-  sub-cases, a daily brief, watchlists and a "Focus" view of the few items that
-  most need attention.
-- **Preserves and exports**: hashed, timestamped page screenshots (Evidence
-  Vault), PDF/HTML/CSV/JSON/Obsidian exports, and an air-gap bundle format for
-  moving data between machines.
-- **Archives sources on the Wayback Machine** (opt-in per action): request a
-  public Internet Archive capture of an item's page, or look up its newest
-  snapshot, as independent proof the page existed even if it is later deleted.
-  Captures run on a polite, rate-limited background queue and their links land
-  in the evidence manifest and case reports.
-- **Audits itself**: an egress monitor records every outbound connection and a
-  file scanner vets anything you import.
-
-The full catalogue is in [docs/FEATURES.md](docs/FEATURES.md).
-
-## Bring your own data
-
-Open sources are only half the picture. Under **Sources** you can upload files
-or ZIPs, watch intranet pages and documentation sites, plug in any HTTP API,
-connect Confluence (Cloud or Data Center) and import an Obsidian vault. Each
-one goes into the feed, a case, or a shared knowledge pool that Sherlock
-answers from, finding passages by meaning as well as by words when a local
-Ollama can embed them, and citing them with clickable links. Intranet hosts are reached only after you allow-list them, and
-secrets stay in `.env`. With a cloud AI provider, your material is kept away
-from it unless you tick "Allow cloud AI". Step-by-step setup, `.env` keys and
-limits: **[docs/INGESTION.md](docs/INGESTION.md)**.
-
-The other way works too: edit an item or compose a write-up from pinned items,
-then publish it to Confluence, a note in your Obsidian vault or the knowledge
-pool, always after a preview and a click, with writing off until you allow it:
-**[docs/PUBLISHING.md](docs/PUBLISHING.md)**.
+<p align="center">
+  <img src="docs/media/case.png" alt="A case with pinned items and notes" width="49%">
+  <img src="docs/media/publish-preview.png" alt="Previewing a write-up before it is published" width="49%">
+</p>
+<p align="center"><sub>Screenshots use the built-in, entirely fictional demo dataset (<b>Load demo data</b> on the empty feed). <a href="docs/TOUR.md">See the full tour →</a></sub></p>
 
 ## Quickstart
+
+**Windows:** download the installer from [Releases](https://github.com/dorrahmani/nexus-osint/releases/latest), run it, and open the desktop shortcut.
+
+**Docker:**
+
+```bash
+docker run -p 127.0.0.1:8000:8000 -v nexus-data:/app/data ghcr.io/dorrahmani/nexus-osint:latest
+```
+
+Keep the `127.0.0.1:` prefix: it is what keeps the app reachable from this machine only.
 
 **From source** (Python 3.11+):
 
 ```bash
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-playwright install chromium-headless-shell           # optional, for the Evidence Vault
 cp .env.example .env                                 # Windows: copy .env.example .env
 uvicorn nexus.web.app:app --host 127.0.0.1 --port 8000
 ```
 
-Open <http://127.0.0.1:8000>. Missing CLI tools and API keys are skipped, not fatal.
-
-**Docker** (bundles the OSINT CLI tools and headless Chromium):
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-### Run with Docker
-
-A prebuilt multi-architecture image (amd64 and arm64) is published to GitHub
-Container Registry with each release:
-
-```bash
-docker run -p 127.0.0.1:8000:8000 -v nexus-data:/app/data ghcr.io/dorrahmani/nexus-osint:latest
-```
-
-Then open <http://127.0.0.1:8000>. Keep the `127.0.0.1:` prefix in `-p`: inside
-the container the server listens on all container interfaces so Docker can
-forward to it, and the prefix is what keeps it reachable from this machine only.
-Never publish it as a bare `-p 8000:8000`. The `nexus-data` volume holds the
-database, evidence and settings; add `--env-file .env` to pass API keys. The
-image contains no `.env`, data or project tooling files and runs as a non-root
-user. Pin a release with a version tag (for example `:1.4.0`) instead of
-`:latest`.
-
-**Windows installer**: download the latest installer from the repository's
-**Releases** page and run it; it installs a desktop shortcut that opens the app in
-its own window and stops the local server when closed. Linux has a script under
-`launcher/linux/`.
-
-On first run an onboarding wizard walks through adding topics and (optionally) an
-AI provider.
-
-## A guided tour
-
-Each screen below exists because of a specific analyst problem. The notes say
-what you are looking at and why it was built that way.
-
-### 1. Focus: "what needs my eyes right now?"
-
-<img src="docs/media/attention.png" alt="Focus view ranking unread items by threat, requirement match, watchlist hits and corroboration" width="100%">
-
-A scan can return hundreds of items, and an analyst cannot read them all. Focus
-ranks the **unread** items by threat level, how well they answer your standing
-questions, watchlist hits, disputes and cross-source corroboration. Every card
-also states **why it surfaced**, so you can trust the ranking or disagree with
-it. Nothing is hidden: everything else is still in the full feed.
-
-### 2. The feed and the item drawer
-
-<img src="docs/media/item-drawer.png" alt="Item drawer with AI summary, case pins, full content, extracted entities and Verify / Similar actions" width="100%">
-
-Each card carries a threat badge, a **verification state** (unverified until
-corroborated), the AI summary in English, the original text one click away, and
-the extracted people, organisations, places and identifiers. Opening an item
-shows the full record plus actions: pin it to a case, **Verify** (finds independent
-items about the same entities and asks the AI whether they corroborate or
-contradict the claim) or **Similar** (local embedding search).
-Summaries are labelled as AI output and the source link is always shown, because
-an analyst has to be able to check the original. Threat levels and the 0-100
-relevance scores are **model estimates, not calibrated probabilities**: they
-order the reading queue, they do not replace judgement, which is also why every
-item starts as *unverified* until other sources corroborate it.
-
-### 3. Cases: an investigation, not a folder
-
-<img src="docs/media/case.png" alt="Case page with connected cases, AI briefing, pinned items and researcher notes" width="100%">
-
-A case has tracking words that pull matching items into a live feed, pinned
-evidence, standing questions, sub-cases, notes and a one-click AI briefing.
-**Connected cases** appears automatically: here, Operation Nightjar is linked to
-the Silt Spider ransomware case because both mention Nightjar Group. That cross-case
-link is computed from the `item_entities` index, not stored by hand.
-
-<img src="docs/media/timeline.png" alt="Case timeline showing pinned items in chronological order with threat levels" width="100%">
-
-The timeline puts pinned evidence in order, which is usually the first thing a
-reviewer asks for. Cases export to PDF/HTML, an Obsidian vault, or a hashed
-evidence manifest.
-
-### 4. Relationship graph
-
-<img src="docs/media/graph.png" alt="Relationship graph across two cases linking threat actors, victims, places, wallets, domains and CVEs" width="100%">
-
-Two cases are selected here, and the graph shows the shared actor in the middle:
-Nightjar Group links the Acme breach to the Harborline ransomware via shared
-tooling. Node size is how often an entity is mentioned; edges are co-mentions.
-Colours separate people, organisations, places and identifiers (wallets,
-domains, CVEs, emails), so infrastructure reuse stands out. Every node opens
-that entity's dossier.
-
-### 5. Your own documents, searchable next to everything else
-
-<img src="docs/media/documents.png" alt="Documents page: a fictional Word report uploaded to the knowledge pool and split into four searchable sections" width="100%">
-
-Upload a report, a spreadsheet, an exported wiki or a ZIP, and Nexus splits it
-into one item per page, section, sheet or slide. Those items are searchable right
-away, and Sherlock answers from them with citations you can click to open the
-exact passage. With a cloud AI provider, a file stays away from it unless you
-tick "Allow cloud AI" for that upload.
-
-<img src="docs/media/connector.png" alt="Confluence connector screen with a fictional Data Center connection, read-only by default, with publishing switched on" width="100%">
-
-The same goes for the places your material already lives: Confluence (Cloud or
-Data Center) and Obsidian vaults, plus read-only Notion, Slack, Google Drive and
-SharePoint or OneDrive connectors. On a closed network, intranet hosts are
-reached only after you allow-list them, and tokens stay in `.env`. Setup details:
-[docs/INGESTION.md](docs/INGESTION.md).
-
-### 6. Edit, preview, publish
-
-<img src="docs/media/publish-preview.png" alt="Item drawer showing an analyst edit and a preview of the exact Confluence content, with nothing sent until Confirm and publish is clicked" width="100%">
-
-Edit an item without touching the collected original, or compose a write-up from
-pinned items, then publish it to Confluence, a note in your Obsidian vault or the
-knowledge pool. Writing is off until you allow it per connection, the preview is
-exactly what will be sent, and only a click confirms it. Sherlock can prepare a
-publish but has no path to confirm one. See [docs/PUBLISHING.md](docs/PUBLISHING.md).
-
-### 7. An activity log of what left the machine
-
-<img src="docs/media/activity-log.png" alt="Outbound activity page listing each event by type, destination, action, size and result" width="100%">
-
-Local-first is easier to believe when you can check it. Outbound activity lists
-AI calls, publishing, e-mail and source fetches by destination, with counts and
-sizes but never the content, and exports to CSV. Stored files can also be
-encrypted at rest (Settings > Encryption at rest, off by default).
-
-<details>
-<summary><b>More of the tour: entity dossier, daily brief, the assistant, settings</b></summary>
-
-#### 8. Entity dossier and contextual pivots
-
-<img src="docs/media/entity.png" alt="Entity dossier for Nightjar Group: co-occurring entities, cases it appears in and every item mentioning it" width="100%">
-
-Everything known about one name on one page: first and last seen, the entities
-it appears alongside, the cases it belongs to, and every item that mentions it.
-When the entity is an identifier (email, username, phone, domain), the dossier
-offers the matching **passive** OSINT tools (for example holehe for an email,
-maigret for a username) as one-click pivots. Only tools that are installed are
-offered, and targets are validated before they reach a subprocess.
-
-#### 9. Daily brief
-
-<img src="docs/media/brief.png" alt="Daily brief listing new items per case since the analyst last looked" width="100%">
-
-The morning read: what is new in each case since you last opened it. The set-up
-checklist at the top says, in plain language, what is not configured yet (here,
-AI analysis is off) instead of failing silently. Optionally, Sherlock emails a
-written version of this brief every morning, and each case can save a daily
-PDF/HTML report that shows up in a "Latest reports" strip here.
-
-#### 10. Sherlock: an assistant that can act, inside a fence
-
-<img src="docs/media/assistant.png" alt="Sherlock panel; with no AI provider set it says so and links to the setup step" width="100%">
-
-Sherlock, the in-app assistant (not the `sherlock` username CLI of the same
-name), can open cases, add tracking words, pin matching items, run a scan and
-build reports for you. It does that only through an **allow-list** of constructive,
-local actions; it has no tool to delete data, change settings, read keys or
-reach the network. Collected text is untrusted input, so the assistant's output
-is rendered as text, never HTML: a prompt injection hidden in a scraped post
-cannot become script execution in your browser.
-
-#### 11. A setup checklist, and settings that explain themselves
-
-<img src="docs/media/setup.png" alt="Setup checklist: five steps with live status (sources, AI, email, daily brief, daily case reports) and the daily-brief scheduling card" width="100%">
-
-**Setup** walks through five short steps, each with a live status and one button:
-sources (several work with no keys), an optional AI provider, the email
-connection, the daily brief (on/off, local time, "scan first", a test send and
-when it last went out / goes out next) and per-case daily reports. Only the
-first step is needed to start collecting.
-
-<img src="docs/media/settings.png" alt="Settings page: AI provider choice, key editor showing set / not set only, and source configuration" width="100%">
-
-Pick an AI provider (cloud or a fully local model), paste keys, and configure
-sources. Keys are written to the local `.env` only and are never shown back:
-the UI only says *set* or *not set*. Each key has step-by-step instructions for
-non-technical users.
-
-<details>
-<summary>Light theme</summary>
-
-<img src="docs/media/feed-light.png" alt="The feed in light theme" width="100%">
-
-</details>
-
-</details>
-
-### Try the same demo yourself
-
-After installing, click **Load demo data** on the empty feed. It inserts 42 fictional
-items across three storylines (a data breach, port ransomware and a
-disinformation network) and three cases, all tagged `demo` so they are easy to
-delete. The screenshots are regenerated by
-[`scripts/capture_screenshots.py`](scripts/capture_screenshots.py).
-
-## Architecture
-
-![Nexus-OSINT architecture: sources, collect, store (SQLite), analyze (AI), investigate, all on 127.0.0.1](docs/architecture.svg)
-
-A scan runs collect -> deduplicate -> watchlist match -> AI analysis -> requirement
-scoring. All SQL lives in the `nexus/storage/` package (one module per domain, re-exported
-from `nexus.storage`); routes live in per-domain FastAPI routers under
-`nexus/web/routers/`; the UI is server-rendered Jinja2 +
-htmx with no JavaScript build step. See [docs/OVERVIEW.md](docs/OVERVIEW.md) for
-the end-to-end walk-through and [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)
-for the module map and extension points.
-
-## Engineering decisions and trade-offs
-
-- **SQLite (WAL) + FTS5 instead of a database server.** One user, one machine,
-  read-heavy workload: a single file gives atomic writes, trigger-maintained
-  full-text search, trivial backup and zero install friction. The cost is a
-  single writer and no multi-user access; collaboration is explicitly out of
-  scope for now (see the roadmap).
-- **Trigger-based collection instead of a 24/7 daemon.** Scans run on demand, from
-  an optional timer, or as a quiet gap-fill at startup. Nothing polls in the
-  background, which keeps the resource footprint and the outbound-traffic surface
-  small and predictable. The cost is that data is only as fresh as the last scan.
-- **Graceful degradation as a rule.** Every source, tool and AI provider is
-  optional and reports `is_available()`. A missing key or binary disables exactly
-  one feature; with no AI configured, items are still collected, stored and
-  searchable. A per-run budget cap and content-hash caching bound AI cost, and
-  quota errors pause a scan instead of failing it.
-- **AI agent safety by allow-list.** The in-app Sherlock can act on your
-  data, but only through a fixed set of constructive local tools
-  (`_ALLOWED_TOOLS` in `nexus/assistant.py`), with a hard cap on actions per turn.
-  Anything else the model asks for is dropped and logged. It has no delete,
-  settings, key or network tools. Model output and collected text are rendered as
-  text, never HTML, because collected content is untrusted input and a prompt
-  injection must not be able to become script execution.
-- **A real entity index.** Entities extracted by the AI are stored as JSON on the
-  analysis row *and* normalized into an `item_entities` table (indexed by
-  canonical name, backfilled on upgrade). This turns "everything mentioning X"
-  from a full scan into an index lookup and backs the entity dossier, the
-  relationship graph and cross-linking.
-- **Safe script embedding.** Where data must be embedded in an inline `<script>`,
-  it goes through Jinja's `|tojson`, which escapes `<`, `>` and `&`. An earlier
-  `json.dumps | safe` path allowed a `</script>` in a collected title to break
-  out; it was fixed and is the pattern to follow.
-
-## What went wrong along the way (and the fix)
-
-Short notes from building it, because the failures shaped the design more than
-the plan did.
-
-| Problem found | Root cause | Fix |
-|---|---|---|
-| A collected headline containing `</script>` could break out of the AI-briefing page. | Item data was embedded with `json.dumps(...) \| safe`, which does not escape `<`. | Switched to Jinja's `\|tojson` and added a regression test. Model output is rendered with `textContent` only. |
-| Gemini "flash" replies came back empty or cut off mid-JSON. | Newer models spend output tokens on internal reasoning before writing anything visible. | A bounded thinking budget is added *on top of* the requested output length, so the answer always keeps its room. |
-| The same story syndicated by 30 outlets flooded the feed. | Exact-URL dedup misses rewrites and tracking parameters. | Items get an aggressively normalised `dedup_key`; near-duplicates collapse into one row with an "echoed N times" badge. |
-| "Everything mentioning X" got slow as the database grew. | Entities lived only as JSON on each analysis row. | A normalised `item_entities` table indexed by canonical name, backfilled on upgrade. It now powers dossiers, the graph and connected cases. |
-| An AI assistant that can "do things" is a prompt-injection target. | Collected posts are attacker-controlled text that reaches the model. | A hard allow-list of constructive local actions, a per-turn action cap, and text-only rendering. Unknown tool calls are dropped and logged. |
-
-## Responsible use
-
-Nexus-OSINT is built for defensive research, journalism and due diligence on
-**publicly available** information.
-
-- **Passive only.** Pivots run passive lookup tools (for example holehe or
-  maigret) against identifiers you already have. Nothing logs in, brute-forces,
-  scans hosts or touches non-public systems, and the assistant has no tool that
-  could.
-- **Respect platform terms.** Social sources use official APIs with your own
-  keys; there is no scraping of logged-in content and no account automation.
-  Check the terms of X, Telegram, Reddit and any API you connect.
-- **Follow the law where you work.** Searching for people can fall under privacy
-  and data-protection law (for example GDPR). Have a lawful basis, collect only
-  what the investigation needs, and delete what you no longer need.
-- **Do not use it to stalk, harass or target individuals.** That is not a
-  supported use, and pull requests that add offensive capability will not be
-  accepted.
-- **Archiving is public.** A Wayback Machine capture tells the Internet Archive
-  which URL you are interested in and creates a snapshot anyone can find. Use it
-  for material you are content to point at publicly; for sensitive work, keep to
-  the local Evidence Vault screenshot.
-
-## Security model
-
-- The server binds to `127.0.0.1` only. Requests get CSRF/DNS-rebinding checks and
-  security headers; user-supplied URLs pass an SSRF guard before being fetched.
-- **Collected data stays on your machine unless you configure a cloud AI
-  provider.** In that case the text of items being analyzed is sent to that
-  provider. Cloud AI providers (Gemini, OpenAI, Anthropic, Grok) are explicit
-  opt-ins: nothing is sent until you add a key. Choose a local model (Ollama or a
-  local OpenAI-compatible server such as LM Studio), or no AI, to keep analysis
-  fully offline. Collection itself necessarily contacts the sources you enable.
-- **The daily email brief is an explicit opt-in that sends data off the
-  machine**: titles, summaries and links of new items go to the mail service you
-  connect (your SMTP server, Resend or SendGrid), and only after a successful
-  test email. App passwords and API keys only, no OAuth. The per-case daily
-  reports themselves stay on disk and are served only on `127.0.0.1`.
-- Reports and transfer bundles leave the machine only when you export them, and
-  bundles never contain secrets.
-- **Internet Archive captures are an explicit, per-action opt-in** (a one-time
-  warning explains the trade-off): the item's URL is sent to archive.org and the
-  resulting snapshot is public. Auto-archiving on pin is off unless you enable
-  it for a case, and the whole feature can be switched off in Settings.
-- **Backups never contain secrets.** Settings › Backup & restore writes one
-  archive (optionally passphrase-encrypted) without API keys or passwords;
-  restore validates the archive fully and saves the current state first.
-- **Optional app password** (off by default, Settings): stops other people at
-  the computer from opening the app. Forgot it? Delete its line from `.env`. See
-  [SECURITY.md](SECURITY.md#app-password).
-- **Optional encryption at rest** (off by default, Settings): uploaded
-  documents and evidence screenshots are stored AES-256-GCM encrypted; the key
-  is wrapped by your passphrase (plus a one-time recovery code, and optionally
-  Windows DPAPI for automatic unlock) and never stored in the database, `.env`
-  or logs. See [SECURITY.md](SECURITY.md#encryption-at-rest).
-- Secrets live in `.env` only (git-ignored). They are never written to the
-  database, shown back in the UI, or emitted in logs (a redaction filter scrubs
-  configured keys).
-- **Works fully offline.** The stylesheet, htmx and the graph library ship
-  with the app; the UI makes no CDN or font requests, and the
-  Content-Security-Policy only allows the app's own origin, with no inline
-  script or eval. A test asserts that no page loads a remote asset.
-- The Security center lists every outbound destination the app has contacted and
-  flags any that is not a configured source or AI provider. Its **activity log**
-  records each AI call, publish, e-mail, archive request and source fetch (metadata
-  only, never content or keys), with filters and CSV export.
-- **Server-side fetches are SSRF-guarded.** Only http(s) to public addresses,
-  re-checked on every redirect hop. Internal hosts are reachable only when you
-  list them explicitly (they then show as "Internal network (allowed)" in the
-  Security center); loopback, link-local/cloud-metadata and the app's own port
-  are never reachable.
-
-Reporting vulnerabilities and the full policy: [SECURITY.md](SECURITY.md).
-
-## Testing and CI
-
-```bash
-pip install -r requirements-dev.txt
-python -m pytest -q
-```
-
-The suite (about 1,050 tests) uses temporary SQLite databases and avoids the
-network; it covers storage and dedup, source parsing, the assistant allow-list,
-web hardening, export/transfer round-trips and route smoke tests.
-
-GitHub Actions (`.github/workflows/ci.yml`) gates every push to `main` and every
-pull request on:
-
-- **test**: the suite on Python 3.11 and 3.12;
-- **lint**: `ruff check .` (rule set and justified ignores in `pyproject.toml`);
-- **types**: `mypy` over the `nexus` package;
-- **assets**: rebuilds the Tailwind stylesheet and vendored htmx and fails if
-  the committed copies have drifted.
-
-Run the same checks locally with `ruff check .` and `mypy`, or install the git
-hooks with `pre-commit install`. Dependabot proposes weekly updates for pip,
-npm and GitHub Actions.
-Contribution guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Roadmap
-
-See [docs/ROADMAP.md](docs/ROADMAP.md): pivots on graph nodes and in the item
-drawer, configurable triage thresholds, richer entity resolution, and
-lint/type-check gates in CI.
-
-## About the author
-
-Built by **Dor Rahmani** — [GitHub](https://github.com/dorrahmani).
-
-Available for consulting on OSINT tooling and AI-agent systems (local-first
-architectures, agent safety, LLM-backed data pipelines).
-
-## License
-
-[MIT](LICENSE)
+Open <http://127.0.0.1:8000> and click **Load demo data**. A missing API key or CLI
+tool just turns one feature off; it never crashes the app.
+
+## Documentation
+
+| | |
+|---|---|
+| [User Guide](docs/USER_GUIDE.md) | Day-to-day use, task by task |
+| [Guided tour](docs/TOUR.md) | Every screen, and why it exists |
+| [Features](docs/FEATURES.md) | Full catalogue and configuration reference |
+| [Ingestion](docs/INGESTION.md) | Uploads, web pages, closed networks, custom APIs, connectors |
+| [Publishing](docs/PUBLISHING.md) | Writing results back to Confluence, Obsidian and the knowledge pool |
+| [Engineering notes](docs/ENGINEERING.md) | Architecture, trade-offs, security model, testing |
+| [Developer Guide](docs/DEVELOPER_GUIDE.md) | Module map and extension points |
+| [Responsible use](docs/RESPONSIBLE_USE.md) | What it is for, and what it cannot do |
+| [Roadmap](docs/ROADMAP.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) | |
+
+## Security in one paragraph
+
+The server binds to `127.0.0.1` only, with CSRF and DNS-rebinding checks, a strict
+CSP with no inline script, and an SSRF guard on every user-supplied URL. Uploads and
+evidence can be encrypted at rest (AES-256-GCM). Secrets live only in `.env`. Release
+installers are built from a leak-scanned source archive. Details and how to report a
+vulnerability: [SECURITY.md](SECURITY.md).
+
+## Built by
+
+**Dor Rahmani**, a CS & Economics student at Tel Aviv University. Feedback and
+issues are welcome.
+
+[MIT licensed](LICENSE)
