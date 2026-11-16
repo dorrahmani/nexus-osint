@@ -2,8 +2,6 @@
 
 <img src="docs/media/social-preview.png" alt="Nexus-OSINT" width="100%">
 
-# Nexus-OSINT
-
 **The OSINT workstation that never leaves your machine.**<br>
 Collect open sources, enrich them with AI, and investigate in cases and graphs.
 
@@ -30,7 +28,7 @@ file, and every outbound connection is logged and auditable.
 
 ## Highlights
 
-| | |
+| Area | What you get |
 |---|---|
 | **Collect** | RSS, Google News, Reddit and GDELT with no keys; optional Twitter/X, Telegram, SERPAPI and any HTTP API without code |
 | **Your own data** | PDF, Word, Excel, PowerPoint, email, images (OCR), ZIPs, intranet pages, Confluence, Obsidian, Notion, Slack, Drive and SharePoint |
@@ -76,7 +74,7 @@ tool just turns one feature off; it never crashes the app.
 
 ## Documentation
 
-| | |
+| Guide | What is in it |
 |---|---|
 | [User Guide](docs/USER_GUIDE.md) | Day-to-day use, task by task |
 | [Guided tour](docs/TOUR.md) | Every screen, and why it exists |
@@ -86,7 +84,8 @@ tool just turns one feature off; it never crashes the app.
 | [Engineering notes](docs/ENGINEERING.md) | Architecture, trade-offs, security model, testing |
 | [Developer Guide](docs/DEVELOPER_GUIDE.md) | Module map and extension points |
 | [Responsible use](docs/RESPONSIBLE_USE.md) | What it is for, and what it cannot do |
-| [Roadmap](docs/ROADMAP.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) | |
+| [Roadmap](docs/ROADMAP.md) | Where it is heading |
+| [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md) | What changed, and how to help |
 
 ## Security in one paragraph
 
