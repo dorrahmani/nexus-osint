@@ -15,9 +15,9 @@ Collect open sources, enrich them with AI, and investigate in cases and graphs.
 
 </div>
 
-https://github.com/user-attachments/assets/6b622d66-14a5-49e0-b5a6-598554d5243a
+https://github.com/user-attachments/assets/1ead8835-e4ae-4536-9c60-4fda51f1befb
 
-<p align="center"><sub>One minute: a single sentence opens a full investigation and its relationship graph. The demo runs on live public sources; names of private individuals are blurred.</sub></p>
+<p align="center"><sub>A one-minute look at the system. The demo runs on live public sources.</sub></p>
 
 ## Why
 
